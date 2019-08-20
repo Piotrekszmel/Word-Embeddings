@@ -6,8 +6,10 @@ from keras.preprocessing import sequence
 import pandas as pd
 import numpy as np
 import sys
+from IPython.display import SVG
+from keras.utils.vis_utils import model_to_dot
 from text_preprocessing import normalize_document, tokenization, generate_context_word_pairs
-
+from model import model
 
 corpus = ['The sky is blue and beautiful.',
           'Love this blue and beautiful sky!',
@@ -43,11 +45,5 @@ vocab_size = len(word2id)
 embed_size = 100
 window_size = 2
 
-i = 0
-for x, y in generate_context_word_pairs(corpus=sequences, window_size=window_size, vocab_size=vocab_size):
-    if 0 not in x[0]:
-        print('Context (X):', [id2word[w] for w in x[0]], '-> Target (Y):', id2word[np.argwhere(y[0])[0][0]])
-    
-        if i == 10:
-            break
-        i += 1
+cbow = model(vocab_size, embed_size, window_size)
+cbow.summary()
