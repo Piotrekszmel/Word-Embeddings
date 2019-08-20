@@ -1,9 +1,12 @@
 from nltk.corpus import gutenberg
 from string import punctuation
+from keras.preprocessing import text
+from keras.utils import np_utils
+from keras.preprocessing import sequence
 import pandas as pd
 import numpy as np
 import sys
-from text_preprocessing import normalize_document
+from text_preprocessing import normalize_document, tokenization
 
 
 corpus = ['The sky is blue and beautiful.',
@@ -33,5 +36,10 @@ norm_bible = [' '.join(tok_sent) for tok_sent in norm_bible]
 norm_bible = filter(None, normalize_corpus(norm_bible))
 norm_bible = [tok_sent for tok_sent in norm_bible if len(tok_sent.split()) > 2]
 
+tokenizer = text.Tokenizer()
+word2id, id2word = tokenization(tokenizer, norm_bible)
 
+vocab_size = len(word2id)
+embed_size = 100
+window_size = 2
 

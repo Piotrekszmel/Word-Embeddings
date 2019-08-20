@@ -12,3 +12,11 @@ def normalize_document(doc):
     filtered_tokens = [token for token in tokens if token not in stop_words]
     doc = ' '.join(filtered_tokens)
     return doc
+
+
+def tokenization(tokenizer, corpus):
+    tokenizer.fit_on_texts(corpus)
+    word2id = tokenizer.word_index
+    word2id['PAD'] = 0
+    id2word = {v:k for k, v in word2id.items()}
+    return word2id, id2word
