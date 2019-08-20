@@ -1,8 +1,11 @@
-import sys
-sys.path.append('/home/pito/Desktop/Word2Vec/text_preprocessing')
+from nltk.corpus import gutenberg
+from string import punctuation
 import pandas as pd
 import numpy as np
+import sys
+sys.path.append('/home/pito/Desktop/Word2Vec/text_preprocessing')
 from text_preprocessing import normalize_document
+
 
 corpus = ['The sky is blue and beautiful.',
           'Love this blue and beautiful sky!',
@@ -22,4 +25,14 @@ corpus_df = corpus_df[['Document', 'Category']]
 
 normalize_corpus = np.vectorize(normalize_document)
 norm_corpus = normalize_corpus(corpus)
-print(norm_corpus)
+
+bible = gutenberg.sents('bible-kjv.txt') 
+remove_terms = punctuation + '0123456789'
+
+norm_bible = [[word.lower() for word in sent if word not in remove_terms] for sent in bible]
+norm_bible = [' '.join(tok_sent) for tok_sent in norm_bible]
+norm_bible = filter(None, normalize_corpus(norm_bible))
+norm_bible = [tok_sent for tok_sent in norm_bible if len(tok_sent.split()) > 2]
+
+
+
