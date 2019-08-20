@@ -6,7 +6,7 @@ from keras.preprocessing import sequence
 import pandas as pd
 import numpy as np
 import sys
-from text_preprocessing import normalize_document, tokenization
+from text_preprocessing import normalize_document, tokenization, generate_context_word_pairs
 
 
 corpus = ['The sky is blue and beautiful.',
@@ -37,9 +37,17 @@ norm_bible = filter(None, normalize_corpus(norm_bible))
 norm_bible = [tok_sent for tok_sent in norm_bible if len(tok_sent.split()) > 2]
 
 tokenizer = text.Tokenizer()
-word2id, id2word = tokenization(tokenizer, norm_bible)
+word2id, id2word, sequences = tokenization(tokenizer, norm_bible)
 
 vocab_size = len(word2id)
 embed_size = 100
 window_size = 2
 
+i = 0
+for x, y in generate_context_word_pairs(corpus=sequences, window_size=window_size, vocab_size=vocab_size):
+    if 0 not in x[0]:
+        print('Context (X):', [id2word[w] for w in x[0]], '-> Target (Y):', id2word[np.argwhere(y[0])[0][0]])
+    
+        if i == 10:
+            break
+        i += 1
