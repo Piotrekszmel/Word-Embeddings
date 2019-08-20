@@ -5,9 +5,6 @@ from keras.utils import np_utils
 from keras.preprocessing import sequence
 import pandas as pd
 import numpy as np
-import sys
-from IPython.display import SVG
-from keras.utils.vis_utils import model_to_dot
 from text_preprocessing import normalize_document, tokenization, generate_context_word_pairs
 from model import model
 
