@@ -19,3 +19,7 @@ corpus = np.array(corpus)
 corpus_df = pd.DataFrame({'Document': corpus,
                           'Category': labels})
 corpus_df = corpus_df[['Document', 'Category']]
+
+normalize_corpus = np.vectorize(normalize_document)
+norm_corpus = normalize_corpus(corpus)
+print(norm_corpus)
