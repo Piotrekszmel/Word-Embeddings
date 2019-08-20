@@ -3,7 +3,6 @@ from string import punctuation
 import pandas as pd
 import numpy as np
 import sys
-sys.path.append('/home/pito/Desktop/Word2Vec/text_preprocessing')
 from text_preprocessing import normalize_document
 
 
