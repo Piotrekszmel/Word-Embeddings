@@ -5,11 +5,11 @@ from keras.layers.embeddings import Embedding
 from keras.models import Sequential
 
 def model(vocab_size, embed_size, input_length):
-    input = Input(shape=(1, ))
+    input = Input(shape=(input_length, ))
     embedding = Embedding(vocab_size, embed_size, input_length=input_length)(input)
     reshape = Reshape((embed_size, ))(embedding)
     
-    input_context = Input(shape=(1, ))
+    input_context = Input(shape=(input_length, ))
     embedding_context = Embedding(vocab_size, embed_size, input_length=input_length,  embeddings_initializer='glorot_uniform')(input_context)
     reshape_context = Reshape((embed_size, ))(embedding_context)
     

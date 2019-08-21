@@ -49,3 +49,17 @@ pairs, labels = skip_grams[0][0], skip_grams[0][1]
 model = model(vocab_size, embed_size, 1)
 
 model.summary()
+
+for epoch in range(1, 6):
+    loss = 0
+    for i, elem in enumerate(skip_grams):
+        pair_first_elem = np.array(list(zip(*elem[0]))[0], dtype='int32')
+        pair_second_elem = np.array(list(zip(*elem[0]))[1], dtype='int32')
+        labels = np.array(elem[1], dtype='int32')
+        X = [pair_first_elem, pair_second_elem]
+        Y = labels
+        if i % 10000 == 0:
+            print('Processed {} (skip_first, skip_second, relevance) pairs'.format(i))
+        loss += model.train_on_batch(X,Y)  
+
+    print('Epoch:', epoch, 'Loss:', loss)
