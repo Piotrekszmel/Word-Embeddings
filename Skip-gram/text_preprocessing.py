@@ -1,6 +1,7 @@
 from keras.preprocessing import text
 from keras.utils import np_utils
 from keras.preprocessing import sequence
+from keras.preprocessing.sequence import skipgrams
 import nltk 
 import re
 
@@ -26,21 +27,6 @@ def tokenization(tokenizer, corpus):
     return word2id, id2word, sequences
 
 
-def generate_context_word_pairs(corpus, window_size, vocab_size):
-    context_length = window_size * 2
-    for sent in corpus:
-        sentence_length = len(sent)
-        for index, word in enumerate(sent):
-            context_words = []
-            label_words = []
-            start = index - window_size
-            end = index + window_size + 1
-
-            context_words.append([sent[i] for i in range(start, end) 
-                                if 0 <= i < sentence_length
-                                and i != index])
-            label_words.append(word)
-
-            x = sequence.pad_sequences(context_words, maxlen=context_length)
-            y = np_utils.to_categorical(label_words, vocab_size)
-            yield(x, y)
+def build_skip_grams(vocab_size, window_size, sequences):
+    skip_grams = [skipgrams(token, vocabulary_size=vocab_size, window_size=window_size) for token in sequences]
+    return skip_grams

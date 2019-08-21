@@ -5,7 +5,7 @@ from keras.utils import np_utils
 from keras.preprocessing import sequence
 import pandas as pd
 import numpy as np
-from text_preprocessing import normalize_document, tokenization, generate_context_word_pairs
+from text_preprocessing import normalize_document, tokenization, build_skip_grams
 
 corpus = ['The sky is blue and beautiful.',
           'Love this blue and beautiful sky!',
@@ -41,6 +41,16 @@ vocab_size = len(word2id)
 embed_size = 100
 window_size = 2
 
-print('Vocabulary Size:', vocab_size)
-print('Vocabulary Sample:', list(word2id.items())[:10])
-print(word2id['flagon'])
+skip_grams = build_skip_grams(vocab_size, 10, sequences)
+
+pairs, labels = skip_grams[0][0], skip_grams[0][1]
+
+print(pairs)
+print()
+print(labels)
+
+for i in range(10):
+    print("({:s} ({:d}), {:s} ({:d})) -> {:d}".format(
+          id2word[pairs[i][0]], pairs[i][0], 
+          id2word[pairs[i][1]], pairs[i][1], 
+          labels[i]))
