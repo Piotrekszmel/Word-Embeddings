@@ -6,6 +6,7 @@ from keras.preprocessing import sequence
 import pandas as pd
 import numpy as np
 from text_preprocessing import normalize_document, tokenization, build_skip_grams
+from model import model
 
 corpus = ['The sky is blue and beautiful.',
           'Love this blue and beautiful sky!',
@@ -45,12 +46,6 @@ skip_grams = build_skip_grams(vocab_size, 10, sequences)
 
 pairs, labels = skip_grams[0][0], skip_grams[0][1]
 
-print(pairs)
-print()
-print(labels)
+model = model(vocab_size, embed_size, 1)
 
-for i in range(10):
-    print("({:s} ({:d}), {:s} ({:d})) -> {:d}".format(
-          id2word[pairs[i][0]], pairs[i][0], 
-          id2word[pairs[i][1]], pairs[i][1], 
-          labels[i]))
+model.summary()

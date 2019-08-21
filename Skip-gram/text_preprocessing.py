@@ -2,6 +2,10 @@ from keras.preprocessing import text
 from keras.utils import np_utils
 from keras.preprocessing import sequence
 from keras.preprocessing.sequence import skipgrams
+from keras.layers import merge
+from keras.layers.core import Dense, Reshape
+from keras.layers.embeddings import Embedding
+from keras.models import Sequential
 import nltk 
 import re
 
@@ -30,3 +34,4 @@ def tokenization(tokenizer, corpus):
 def build_skip_grams(vocab_size, window_size, sequences):
     skip_grams = [skipgrams(token, vocabulary_size=vocab_size, window_size=window_size) for token in sequences]
     return skip_grams
+
