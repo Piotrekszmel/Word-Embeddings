@@ -33,3 +33,14 @@ norm_bible = [[word.lower() for word in sent if word not in remove_terms] for se
 norm_bible = [' '.join(tok_sent) for tok_sent in norm_bible]
 norm_bible = filter(None, normalize_corpus(norm_bible))
 norm_bible = [tok_sent for tok_sent in norm_bible if len(tok_sent.split()) > 2]
+
+tokenizer = text.Tokenizer()
+word2id, id2word, sequences = tokenization(tokenizer, norm_bible)
+
+vocab_size = len(word2id)
+embed_size = 100
+window_size = 2
+
+print('Vocabulary Size:', vocab_size)
+print('Vocabulary Sample:', list(word2id.items())[:10])
+print(word2id['flagon'])
