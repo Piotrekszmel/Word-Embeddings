@@ -44,3 +44,15 @@ window_size = 2
 
 cbow = model(vocab_size, embed_size, window_size)
 cbow.summary()
+
+for epoch in range(1, 6):
+    loss = 0
+    i = 0
+    for x, y in generate_context_word_pairs(corpus=sequences, window_size=window_size, vocab_size=vocab_size):
+        i += 1
+        loss += cbow.train_on_batch(x, y)
+        if i % 100000 == 0:
+            print('Processed {} (context, word) pairs'.format(i))
+    
+    print('Epoch:', epoch, '\tloss:', loss)
+    print()
