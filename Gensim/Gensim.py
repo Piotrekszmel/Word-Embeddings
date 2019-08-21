@@ -18,10 +18,10 @@ norm_bible = [tok_sent for tok_sent in norm_bible if len(tok_sent.split()) > 2]
 wpt = nltk.WordPunctTokenizer()
 tokenized_corpus = [wpt.tokenize(document) for document in norm_bible]
 
-feature_size = 100
-window_context = 30
-min_word_count = 1
-sample = 1e-3
+feature_size = 100 # Word vector dimensionality  
+window_context = 30  # Context window size 
+min_word_count = 1 # Minimum word count
+sample = 1e-3 # Downsample setting for frequent words
 
 w2v_model = word2vec.Word2Vec(tokenized_corpus, size=feature_size, window=window_context,
                             min_count=min_word_count, sample=sample, iter=50)
