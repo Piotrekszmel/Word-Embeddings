@@ -1,2 +1,3 @@
 # Word2Vec
-Few Word2Vec implementation. The main goal is to understand the algorithms more accurately and compare their effectiveness.
+Implementation of models related to word embedding. The main goal is to better understand the operation of the presented models.
+
