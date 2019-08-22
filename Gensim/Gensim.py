@@ -84,4 +84,9 @@ plt.figure(figsize=(12, 6))
 plt.scatter(T[:, 0], T[:, 1], c='orange', edgecolors='r')
 for label, x, y in zip(labels, T[:, 0], T[:, 1]):
     plt.annotate(label, xy=(x+1, y+1), xytext=(0, 0), textcoords='offset points')
+
 plt.show()
+
+print(w2v_model.wv['sky'])
+
+
