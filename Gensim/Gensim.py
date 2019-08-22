@@ -20,7 +20,7 @@ norm_bible = [tok_sent for tok_sent in norm_bible if len(tok_sent.split()) > 2]
 
 wpt = nltk.WordPunctTokenizer()
 tokenized_corpus = [wpt.tokenize(document) for document in norm_bible]
-
+'''
 feature_size = 100 # Word vector dimensionality  
 window_context = 30  # Context window size 
 min_word_count = 1 # Minimum word count
@@ -46,3 +46,42 @@ for label, x, y in zip(labels, T[:, 0], T[:, 1]):
     plt.annotate(label, xy=(x+1, y+1), xytext=(0, 0), textcoords='offset points')
 
 #plt.show()
+'''
+
+
+corpus = ['The sky is blue and beautiful.',
+          'Love this blue and beautiful sky!',
+          'The quick brown fox jumps over the lazy dog.',
+          "A king's breakfast has sausages, ham, bacon, eggs, toast and beans",
+          'I love green eggs, ham, sausages and bacon!',
+          'The brown fox is quick and the blue dog is lazy!',
+          'The sky is very blue and the sky is very beautiful today',
+          'The dog is lazy but the brown fox is quick!'    
+]
+
+normalize_corpus = np.vectorize(normalize_document)
+norm_corpus = normalize_corpus(corpus)
+tokenized_corpus = [wpt.tokenize(document) for document in norm_corpus]
+
+feature_size = 10
+window_context = 10
+min_word_count = 1
+sample = 1e-3
+
+
+w2v_model = word2vec.Word2Vec(tokenized_corpus, size=feature_size, window=window_context,
+                            min_count=min_word_count, sample=sample, iter=100)
+
+words = w2v_model.wv.index2word
+wvs = w2v_model.wv[words]
+
+tsne = TSNE(n_components=2, random_state=0, n_iter=5000, perplexity=2)
+np.set_printoptions(suppress=True)
+T = tsne.fit_transform(wvs)
+labels = words
+
+plt.figure(figsize=(12, 6))
+plt.scatter(T[:, 0], T[:, 1], c='orange', edgecolors='r')
+for label, x, y in zip(labels, T[:, 0], T[:, 1]):
+    plt.annotate(label, xy=(x+1, y+1), xytext=(0, 0), textcoords='offset points')
+plt.show()
