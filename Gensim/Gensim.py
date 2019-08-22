@@ -1,9 +1,12 @@
 from gensim.models import word2vec
 import nltk
 import numpy as np
+import matplotlib.pyplot as plt
 from nltk.corpus import gutenberg
 from string import punctuation
+from sklearn.manifold import TSNE
 from text_preprocessing import normalize_document
+
 
 normalize_corpus = np.vectorize(normalize_document)
 
@@ -28,4 +31,18 @@ w2v_model = word2vec.Word2Vec(tokenized_corpus, size=feature_size, window=window
 
 similar_words = {search_term: [item[0] for item in w2v_model.wv.most_similar([search_term], topn=5)]
                   for search_term in ['god', 'jesus', 'noah', 'egypt', 'john', 'gospel', 'moses','famine']}
-print(similar_words)
+
+words = sum([[k] + v for k, v in similar_words.items()], [])
+wvs = w2v_model.wv[words]
+
+tsne = TSNE(n_components=2, random_state=0, n_iter=10000, perplexity=2)
+np.set_printoptions(suppress=True)
+T = tsne.fit_transform(wvs)
+labels = words
+
+plt.figure(figsize=(14, 8))
+plt.scatter(T[:, 0], T[:, 1], c='orange', edgecolors='r')
+for label, x, y in zip(labels, T[:, 0], T[:, 1]):
+    plt.annotate(label, xy=(x+1, y+1), xytext=(0, 0), textcoords='offset points')
+
+#plt.show()
