@@ -1,12 +1,15 @@
 from gensim.models import word2vec
 import nltk
 import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
 from nltk.corpus import gutenberg
 from string import punctuation
 from sklearn.manifold import TSNE
+from sklearn.cluster import AffinityPropagation
+from sklearn.decomposition import PCA
 from text_preprocessing import normalize_document
-
+from document_lvl_embeddings import average_word_vectorizer, average_word_vectors
 
 normalize_corpus = np.vectorize(normalize_document)
 
@@ -58,19 +61,28 @@ corpus = ['The sky is blue and beautiful.',
           'The sky is very blue and the sky is very beautiful today',
           'The dog is lazy but the brown fox is quick!'    
 ]
+labels = ['weather', 'weather', 'animals', 'food', 'food', 'animals', 'weather', 'animals']
+
+corpus = np.array(corpus)
+corpus_df = pd.DataFrame({'Document': corpus,
+                          'Category': labels})
+corpus_df = corpus_df[['Document', 'Category']]
 
 normalize_corpus = np.vectorize(normalize_document)
 norm_corpus = normalize_corpus(corpus)
+
+wpt = nltk.WordPunctTokenizer()
 tokenized_corpus = [wpt.tokenize(document) for document in norm_corpus]
 
-feature_size = 10
-window_context = 10
-min_word_count = 1
-sample = 1e-3
+# Set values for various parameters
+feature_size = 10    # Word vector dimensionality  
+window_context = 10          # Context window size                                                                                    
+min_word_count = 1   # Minimum word count                        
+sample = 1e-3   # Downsample setting for frequent words
 
-
-w2v_model = word2vec.Word2Vec(tokenized_corpus, size=feature_size, window=window_context,
-                            min_count=min_word_count, sample=sample, iter=100)
+w2v_model = word2vec.Word2Vec(tokenized_corpus, size=feature_size, 
+                              window=window_context, min_count = min_word_count,
+                              sample=sample, iter=100)
 
 words = w2v_model.wv.index2word
 wvs = w2v_model.wv[words]
@@ -87,6 +99,13 @@ for label, x, y in zip(labels, T[:, 0], T[:, 1]):
 
 plt.show()
 
-print(w2v_model.wv['sky'])
+w2v_feature_array = average_word_vectorizer(corpus=tokenized_corpus, model=w2v_model,
+                                            num_features=feature_size)
+
+ap = AffinityPropagation()
+ap.fit(w2v_feature_array)
+cluster_labels = ap.labels_
+cluster_labels = pd.DataFrame(cluster_labels, columns=['ClusterLabel'])
+print(pd.concat([corpus_df, cluster_labels], axis=1))
 
 
