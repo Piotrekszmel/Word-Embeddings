@@ -44,7 +44,6 @@ def remove_accented_chars(text):
 
 
 def expand_contractions(text, contraction_mapping=CONTRACTION_MAP):
-    
     contractions_pattern = re.compile('({})'.format('|'.join(contraction_mapping.keys())), 
                                       flags=re.IGNORECASE|re.DOTALL)
     def expand_match(contraction):
@@ -59,3 +58,10 @@ def expand_contractions(text, contraction_mapping=CONTRACTION_MAP):
     expanded_text = contractions_pattern.sub(expand_match, text)
     expanded_text = re.sub("'", "", expanded_text)
     return expanded_text
+
+
+def removing_special_characters(text):
+    text = re.sub('[^a-zA-Z0-9\s]', '', text)
+    return text
+
+
