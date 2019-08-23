@@ -30,3 +30,14 @@ tokenizer = ToktokTokenizer()
 stopword_list = nltk.corpus.stopword.words('english')
 stopword_list.remove('no')
 stopword_list.remove('not')
+
+#Cleaning Text - strip HTML
+def strip_html_tags(text):
+    soup = BeautifulSoup(text, 'html.parser')
+    stripped_text = soup.get_text()
+    return stripped_text
+
+
+def remove_accented_chars(text):
+    text = unicodedata.normalize('NFKD', text).encode('ascii', 'ignore').decode('utf-8', 'ignore')
+return text
