@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 from text_preprocessing import normalize_document
-from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 
 corpus = ['The sky is blue and beautiful.',
           'Love this blue and beautiful sky!',
@@ -29,11 +29,18 @@ cv = CountVectorizer(min_df=0., max_df=1.)
 cv_matrix = cv.fit_transform(norm_corpus)
 cv_matrix = cv_matrix.toarray()
 
-print(norm_corpus, '\n\n')
 #Bag of N-Grams
 bv = CountVectorizer(ngram_range=(2,2))
 bv_matrix = bv.fit_transform(norm_corpus)
 
 bv_matrix = bv_matrix.toarray()
 vocab = bv.get_feature_names()
-print(vocab)
+
+#TF-IDF 
+tv = TfidfVectorizer()
+tv_matrix = tv.fit_transform(norm_corpus)
+tv_matrix = tv_matrix.toarray()
+
+vocab = tv.get_feature_names()
+print(pd.DataFrame(np.round(tv_matrix, 2), columns=vocab))
+
