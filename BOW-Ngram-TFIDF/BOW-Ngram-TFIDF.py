@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 from text_preprocessing import normalize_document
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
 
 corpus = ['The sky is blue and beautiful.',
           'Love this blue and beautiful sky!',
@@ -39,8 +40,11 @@ vocab = bv.get_feature_names()
 #TF-IDF 
 tv = TfidfVectorizer()
 tv_matrix = tv.fit_transform(norm_corpus)
+
 tv_matrix = tv_matrix.toarray()
-
 vocab = tv.get_feature_names()
-print(pd.DataFrame(np.round(tv_matrix, 2), columns=vocab))
 
+#Pairwise document similarity
+similarity_matrix = cosine_similarity(tv_matrix)
+similarity_df = pd.DataFrame(similarity_matrix)
+print(similarity_df)
