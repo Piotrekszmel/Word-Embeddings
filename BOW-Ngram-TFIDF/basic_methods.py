@@ -15,7 +15,6 @@ corpus = ['The sky is blue and beautiful.',
 ]
 labels = ['weather', 'weather', 'animals', 'food', 'food', 'animals', 'weather', 'animals']
 
-
 corpus = np.array(corpus)
 corpus_df = pd.DataFrame({'Document': corpus,
                           'Category': labels})
@@ -30,12 +29,14 @@ cv = CountVectorizer(min_df=0., max_df=1.)
 cv_matrix = cv.fit_transform(norm_corpus)
 cv_matrix = cv_matrix.toarray()
 
+
 #Bag of N-Grams
 bv = CountVectorizer(ngram_range=(2,2))
 bv_matrix = bv.fit_transform(norm_corpus)
 
 bv_matrix = bv_matrix.toarray()
 vocab = bv.get_feature_names()
+
 
 #TF-IDF 
 tv = TfidfVectorizer()
@@ -44,7 +45,7 @@ tv_matrix = tv.fit_transform(norm_corpus)
 tv_matrix = tv_matrix.toarray()
 vocab = tv.get_feature_names()
 
+
 #Pairwise document similarity
 similarity_matrix = cosine_similarity(tv_matrix)
 similarity_df = pd.DataFrame(similarity_matrix)
-print(similarity_df)
