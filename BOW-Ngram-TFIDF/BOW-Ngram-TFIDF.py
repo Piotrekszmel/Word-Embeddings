@@ -29,7 +29,11 @@ cv = CountVectorizer(min_df=0., max_df=1.)
 cv_matrix = cv.fit_transform(norm_corpus)
 cv_matrix = cv_matrix.toarray()
 
+print(norm_corpus, '\n\n')
+#Bag of N-Grams
+bv = CountVectorizer(ngram_range=(2,2))
+bv_matrix = bv.fit_transform(norm_corpus)
 
-c = CountVectorizer(min_df=1, max_df=2)
-c_matrix = c.fit_transform(['I am am am am lol lol', 'am am am I lol','am am' ])
-print(c_matrix.toarray())
+bv_matrix = bv_matrix.toarray()
+vocab = bv.get_feature_names()
+print(vocab)
