@@ -7,6 +7,7 @@ from scipy.cluster.hierarchy import dendrogram, linkage
 import matplotlib.pyplot as plt
 from scipy.cluster.hierarchy import fcluster
 from sklearn.decomposition import LatentDirichletAllocation
+from sklearn.cluster import KMeans
 
 corpus = ['The sky is blue and beautiful.',
           'Love this blue and beautiful sky!',
@@ -76,12 +77,17 @@ cluster_labels = pd.DataFrame(cluster_labels, columns=['ClusterLabel'])
 lda = LatentDirichletAllocation(n_components=3, max_iter=10000, random_state=0)
 dt_matrix = lda.fit_transform(cv_matrix)
 features = pd.DataFrame(dt_matrix, columns=["T1", "T2", "T3"])
-print(features)
 
 tt_matrix = lda.components_
 for topic_weights in tt_matrix:
     topic = [(token, weight) for token, weight in zip(vocab, topic_weights)]
     topic = sorted(topic, key=lambda x: -x[1])
     topic = [item for item in topic if item[1] > 0.6]
-    print('\n')
-    print(topic)
+
+
+#Document Clustering with Topic Model Features
+km = KMeans(n_clusters=3, random_state=0)
+km.fit_transform(features)
+cluster_labels = km.labels_
+cluster_labels = pd.DataFrame(cluster_labels, columns=['ClusterLabel'])
+print(pd.concat([corpus_df, cluster_labels], axis=1))
