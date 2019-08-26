@@ -4,6 +4,9 @@ from text_preprocessing import normalize_document
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from scipy.cluster.hierarchy import dendrogram, linkage
+import matplotlib.pyplot as plt
+from scipy.cluster.hierarchy import fcluster
+from sklearn.decomposition import LatentDirichletAllocation
 
 corpus = ['The sky is blue and beautiful.',
           'Love this blue and beautiful sky!',
@@ -54,5 +57,23 @@ similarity_df = pd.DataFrame(similarity_matrix)
 
 #Document Clustering with Similarity Features
 Z = linkage(similarity_matrix, 'ward')
-print(pd.DataFrame(Z, columns=['Document\Cluster 1', 'Document\Cluster 2', 
-                         'Distance', 'Cluster Size'], dtype='object'))
+
+
+plt.figure(figsize=(8, 3))
+plt.title('Hierarchical Clustering Dendrogram')
+plt.xlabel('Data point')
+plt.ylabel('Distance')
+dendrogram(Z)
+plt.axhline(y=1.0, c='k', ls='--', lw=0.5)
+
+max_dist = 1.0
+
+cluster_labels = fcluster(Z, max_dist, criterion='distance')
+cluster_labels = pd.DataFrame(cluster_labels, columns=['ClusterLabel'])
+
+
+#Topic Models
+lda = LatentDirichletAllocation(n_components=3, max_iter=10000, random_state=0)
+dt_matrix = lda.fit_transform(cv_matrix)
+features = pd.DataFrame(dt_matrix, columns=["T1", "T2", "T3"])
+print(features)
