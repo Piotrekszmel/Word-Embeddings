@@ -4,6 +4,7 @@ import numpy as np
 from text_preprocessing import normalize_document
 from sklearn.manifold import TSNE
 import matplotlib.pyplot as plt
+from sklearn.cluster import KMeans
 
 nlp = spacy.load('en_vectors_web_lg')
 
@@ -20,6 +21,10 @@ corpus = ['The sky is blue and beautiful.',
 ]
 labels = ['weather', 'weather', 'animals', 'food', 'food', 'animals', 'weather', 'animals']
 
+corpus_df = pd.DataFrame({'Document': corpus,
+                          'Category': labels})
+corpus_df = corpus_df[['Document', 'Category']]
+
 corpus = np.array(corpus)
 normalize_corpus = np.vectorize(normalize_document)
 norm_corpus = normalize_corpus(corpus)
@@ -34,8 +39,20 @@ np.set_printoptions(suppress=True)
 T = tsne.fit_transform(word_glove_vectors)
 labels = unique_words
 
+"""
 plt.figure(figsize=(12, 6))
 plt.scatter(T[:, 0], T[:, 1], c='orange', edgecolors='r')
 for label, x, y in zip(labels, T[:, 0], T[:, 1]):
     plt.annotate(label, xy=(x+1, y+1), xytext=(0, 0), textcoords='offset points')
 plt.show()
+"""
+
+#Cluster documents with GloVe Embeddings
+doc_glove_vectors = np.array([nlp(str(doc)).vector for doc in norm_corpus])
+
+km = KMeans(n_clusters=3, random_state=0)
+km.fit_transform(doc_glove_vectors)
+cluster_labels = km.labels_
+cluster_labels = pd.DataFrame(cluster_labels, columns=['ClusterLabel'])
+print(pd.concat([corpus_df, cluster_labels], axis=1))
+
