@@ -3,6 +3,7 @@ import numpy as np
 from text_preprocessing import normalize_document
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
+from scipy.cluster.hierarchy import dendrogram, linkage
 
 corpus = ['The sky is blue and beautiful.',
           'Love this blue and beautiful sky!',
@@ -49,3 +50,9 @@ vocab = tv.get_feature_names()
 #Pairwise document similarity
 similarity_matrix = cosine_similarity(tv_matrix)
 similarity_df = pd.DataFrame(similarity_matrix)
+
+
+#Document Clustering with Similarity Features
+Z = linkage(similarity_matrix, 'ward')
+print(pd.DataFrame(Z, columns=['Document\Cluster 1', 'Document\Cluster 2', 
+                         'Distance', 'Cluster Size'], dtype='object'))
