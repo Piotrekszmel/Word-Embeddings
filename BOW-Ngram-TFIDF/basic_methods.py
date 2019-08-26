@@ -77,3 +77,11 @@ lda = LatentDirichletAllocation(n_components=3, max_iter=10000, random_state=0)
 dt_matrix = lda.fit_transform(cv_matrix)
 features = pd.DataFrame(dt_matrix, columns=["T1", "T2", "T3"])
 print(features)
+
+tt_matrix = lda.components_
+for topic_weights in tt_matrix:
+    topic = [(token, weight) for token, weight in zip(vocab, topic_weights)]
+    topic = sorted(topic, key=lambda x: -x[1])
+    topic = [item for item in topic if item[1] > 0.6]
+    print('\n')
+    print(topic)
