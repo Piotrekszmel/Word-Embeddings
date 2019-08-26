@@ -51,7 +51,7 @@ tv_matrix = tv_matrix.toarray()
 vocab = tv.get_feature_names()
 
 
-#Pairwise document similarity
+#Pairwise document similaritykt
 similarity_matrix = cosine_similarity(tv_matrix)
 similarity_df = pd.DataFrame(similarity_matrix)
 
